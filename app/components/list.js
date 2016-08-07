@@ -1,5 +1,6 @@
-import React, { Component, PropTypes } from 'react';
-import moment from 'moment';
+import React, { Component, PropTypes } from "react";
+import moment from "moment";
+import style from "./list.css";
 
 class List extends Component {
     render() {
@@ -7,15 +8,20 @@ class List extends Component {
             return moment(notification.moment).isSame(moment(), 'day');
         });
         return (
-            <ul>
+            <table className={style.list}>
+                <tbody>
                 {notifications.map((notification, index) => {
                     return (
-                        <li key={index}>
-                            {notification}
-                        </li>
+                        <tr key={index}>
+                            <td>{index + 1}</td>
+                            <td>
+                                {moment(notification.moment).format('HH:mm')}
+                            </td>
+                        </tr>
                     );
                 })}
-            </ul>
+                </tbody>
+            </table>
         )
     }
 }

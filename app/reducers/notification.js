@@ -1,8 +1,6 @@
 import _ from 'lodash';
 
-const initialState = [
-    1
-];
+const initialState = [{moment: new Date().getTime(), completed: false}];
 
 export default function notifications(state = initialState, action) {
     let clonedState = _.cloneDeep(state);
