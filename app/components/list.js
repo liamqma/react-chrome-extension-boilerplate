@@ -1,6 +1,6 @@
 import React, { Component, PropTypes } from "react";
 import moment from "moment";
-import style from "./list.css";
+import { Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColumn } from "material-ui/Table";
 
 class List extends Component {
     render() {
@@ -8,20 +8,30 @@ class List extends Component {
             return moment(notification.moment).isSame(moment(), 'day');
         });
         return (
-            <table className={style.list}>
-                <tbody>
-                {notifications.map((notification, index) => {
-                    return (
-                        <tr key={index}>
-                            <td>{index + 1}</td>
-                            <td>
-                                {moment(notification.moment).format('HH:mm')}
-                            </td>
-                        </tr>
-                    );
-                })}
-                </tbody>
-            </table>
+            <Table>
+                <TableHeader adjustForCheckbox={false} displaySelectAll={false}>
+                    <TableRow>
+                        <TableHeaderColumn>#</TableHeaderColumn>
+                        <TableHeaderColumn>Time</TableHeaderColumn>
+                        <TableHeaderColumn>Completed</TableHeaderColumn>
+                    </TableRow>
+                </TableHeader>
+                <TableBody displayRowCheckbox={false}>
+                    {notifications.map((notification, index) => {
+                        return (
+                            <TableRow key={index}>
+                                <TableRowColumn>{index + 1}</TableRowColumn>
+                                <TableRowColumn>
+                                    {moment(notification.moment).format('HH:mm')}
+                                </TableRowColumn>
+                                <TableRowColumn>
+                                    {notification.completed ? '✔' : '✖'}
+                                </TableRowColumn>
+                            </TableRow>
+                        );
+                    })}
+                </TableBody>
+            </Table>
         )
     }
 }

@@ -1,7 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import Root from '../../app/containers/root';
-import 'purecss/build/pure-min.css';
 
 chrome.storage.local.get('state', obj => {
   const { state } = obj;
