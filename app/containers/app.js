@@ -5,6 +5,7 @@ import * as NotificationActions from "../actions/notification";
 import style from "./app.css";
 import List from "../components/list";
 import RaisedButton from "material-ui/RaisedButton";
+import Man from '../components/man';
 
 @connect(
     state => ({
@@ -24,8 +25,9 @@ export default class App extends Component {
     render() {
         return (
             <div className={style.normal}>
+                <Man completed={false}/>
                 <div className={style.button}>
-                    <RaisedButton label="Stretch" primary={true} onTouchTap={this.props.actions.add} />
+                    <RaisedButton label="Stretch" primary={true} onTouchTap={this.props.actions.add}/>
                 </div>
                 <List {...this.props} />
             </div>

@@ -1,12 +1,11 @@
 import React, { Component, PropTypes } from "react";
 import moment from "moment";
 import { Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColumn } from "material-ui/Table";
+import { size } from 'lodash';
 
 class List extends Component {
     render() {
-        const notifications = this.props.notifications.filter((notification) => {
-            return moment(notification.moment).isSame(moment(), 'day');
-        });
+        if (!size(this.props.notifications)) return null;
         return (
             <Table>
                 <TableHeader adjustForCheckbox={false} displaySelectAll={false}>
@@ -17,7 +16,7 @@ class List extends Component {
                     </TableRow>
                 </TableHeader>
                 <TableBody displayRowCheckbox={false}>
-                    {notifications.map((notification, index) => {
+                    {this.props.notifications.map((notification, index) => {
                         return (
                             <TableRow key={index}>
                                 <TableRowColumn>{index + 1}</TableRowColumn>
