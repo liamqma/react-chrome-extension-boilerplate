@@ -23,13 +23,14 @@ export default class App extends Component {
     };
 
     render() {
+        const html = [];
+        for (const key in this.props.notifications) {
+            html.push(<Man completed={this.props.notifications[key]}/>);
+        }
+
         return (
             <div className={style.normal}>
-                <Man completed={false}/>
-                <div className={style.button}>
-                    <RaisedButton label="Stretch" primary={true} onTouchTap={this.props.actions.add}/>
-                </div>
-                <List {...this.props} />
+                {html}
             </div>
         );
     }
