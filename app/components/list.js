@@ -24,7 +24,9 @@ class List extends Component {
                                     {moment(notification.moment).format('HH:mm')}
                                 </TableRowColumn>
                                 <TableRowColumn>
-                                    {notification.completed ? '✔' : '✖'}
+                                    <span onClick={this.props.onComplete.bind(null, index)}>
+                                        {notification.completed ? '✔' : '✖'}
+                                    </span>
                                 </TableRowColumn>
                             </TableRow>
                         );
