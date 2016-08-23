@@ -4,9 +4,8 @@ const customPath = path.join(__dirname, './customPublicPath');
 
 module.exports = {
   entry: {
-    app: [customPath, path.join(__dirname, '../chrome/extension/todoapp')],
-    background: [customPath, path.join(__dirname, '../chrome/extension/background')],
-    inject: [customPath, path.join(__dirname, '../chrome/extension/inject')]
+    app: [customPath, path.join(__dirname, '../chrome/extension/app')],
+    background: [customPath, path.join(__dirname, '../chrome/extension/background')]
   },
   output: {
     path: path.join(__dirname, '../build/js'),
@@ -44,6 +43,9 @@ module.exports = {
         'css?modules&importLoaders=1&localIdentName=[name]__[local]___[hash:base64:5]',
         'postcss'
       ]
+    },{
+        test: /\.(jpe?g|png|gif|svg)$/i,
+        loader: 'url'
     }]
   }
 };

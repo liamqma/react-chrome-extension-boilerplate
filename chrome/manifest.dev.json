@@ -8,16 +8,11 @@
     "default_popup": "popup.html"
   },
   "icons": {
-    "16": "img/icon-16.png",
-    "48": "img/icon-48.png",
-    "128": "img/icon-128.png"
+    "128": "img/stretching.png"
   },
-  "web_accessible_resources": [
-    "inject.html"
-  ],
   "background": {
     "page": "background.html"
   },
-  "permissions": [ "management", "storage", "alarms", "notifications" ],
+  "permissions": [ "storage", "alarms", "notifications" ],
   "content_security_policy": "default-src 'self'; script-src 'self' http://localhost:8888 https://localhost:8888 'unsafe-eval'; connect-src http://localhost:8888 https://localhost:8888; style-src * 'unsafe-inline' 'self' blob:; img-src 'self' data:;"
 }
