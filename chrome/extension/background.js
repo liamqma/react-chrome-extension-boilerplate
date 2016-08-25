@@ -1,6 +1,6 @@
-import iconUrl from '../../app/containers/stretching.png';
+import iconUrl from '../assets/img/stretching.png';
 
-chrome.alarms.onAlarm.addListener(function(alarm) {
+function notify() {
     chrome.notifications.create('reminder', {
         type: 'basic',
         iconUrl,
@@ -8,15 +8,18 @@ chrome.alarms.onAlarm.addListener(function(alarm) {
         message: 'We want you to live longer!',
         isClickable: true
     });
+}
+
+chrome.runtime.onMessage.addListener(
+    function (request) {
+        console.log(request);
+    });
+
+chrome.alarms.onAlarm.addListener(function (alarm) {
+    notify();
 });
 
-chrome.notifications.create('reminder', {
-    type: 'basic',
-    iconUrl,
-    title: 'Time to stand up.',
-    message: 'We want you to live longer!',
-    isClickable: true
-});
+notify();
 
 chrome.notifications.onClicked.addListener(notificationId => {
     chrome.notifications.clear(notificationId);
