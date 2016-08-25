@@ -1,89 +1,83 @@
 import React, { Component, PropTypes } from "react";
 import { bindActionCreators } from "redux";
 import { connect } from "react-redux";
-import * as NotificationActions from "../actions/notification";
+import * as SettingActions from "../actions/setting";
 import style from "./app.css";
 import List from "../components/list";
 import RaisedButton from "material-ui/RaisedButton";
 import moment from 'moment';
-import icon from './stretching.png';
-
-const ONE_HOUR_IN_milliseconds = 1000 * 60 * 60;
-
-function nextNotificationInMilliseconds(lastNotificationMoment) {
-    return moment().diff(moment(lastNotificationMoment));
-}
+import Slider from 'material-ui/Slider';
 
 @connect(
     state => ({
-        notifications: state.notification
+        setting: state.setting
     }),
     dispatch => ({
-        actions: bindActionCreators(NotificationActions, dispatch)
+        actions: bindActionCreators(SettingActions, dispatch)
     })
 )
 export default class App extends Component {
 
     static propTypes = {
-        notifications: PropTypes.array.isRequired,
+        setting: PropTypes.object.isRequired,
         actions: PropTypes.object.isRequired
     };
 
-    constructor(props) {
-        super(props);
-        this.state = {
-            message: ''
-        };
+    onFromChange(event, value) {
+        this.props.actions.update('from', value);
     }
 
-    componentDidMount() {
-        //chrome.alarms.onAlarm.addListener(this.check.bind(this));
-        //chrome.alarms.create('app', {
-        //    periodInMinutes: 1
-        //});
-        //this.check();
+    onToChange(event, value) {
+        this.props.actions.update('to', value);
     }
 
-    check() {
-        const { notifications } = this.props;
-
-        if (notifications.length === 0) {
-            this.notify();
-        } else {
-            if (nextNotificationInMilliseconds(notifications[notifications.length - 1].moment) > ONE_HOUR_IN_milliseconds) {
-                this.notify();
-            } else {
-                this.setState({
-                    message: `Next notification will be in ${Math.round((ONE_HOUR_IN_milliseconds - moment().diff(moment(notifications[notifications.length - 1].moment))) / 1000 / 60)} minutes`
-                });
-            }
-        }
-    }
-
-    notify() {
-        chrome.notifications.create('reminder', {
-            type: 'basic',
-            iconUrl: icon,
-            title: 'Time to stand up.',
-            message: 'We want you to live longer!',
-            isClickable: true
-        });
-        chrome.notifications.onClicked.addListener(notificationId => {
-            chrome.notifications.clear(notificationId);
-            window.open("http://www.liamqma.me/notify/office-stretches.jpg");
-        });
-        this.props.actions.add();
-    }
-
-    onComplete(index) {
-        window.open("http://www.liamqma.me/notify/office-stretches.jpg");
-        this.props.actions.complete(index);
+    onEveryChange(event, value) {
+        this.props.actions.update('every', value);
     }
 
     render() {
         return (
             <div className={style.normal}>
-                Stretch Reminder
+                <h1>Stretch Reminder</h1>
+                <div className={style.row}>
+                    <div className={style.col}>
+                        From <label>{this.props.setting.from}:00</label>
+                    </div>
+                    <div className={style.col}>
+                        <Slider sliderStyle={{marginTop: 0, marginBottom: 0}}
+                                min={0}
+                                max={24}
+                                step={1}
+                                onChange={this.onFromChange.bind(this)}
+                                value={this.props.setting.from}/>
+                    </div>
+                </div>
+                <div className={style.row}>
+                    <div className={style.col}>
+                        To <label>{this.props.setting.to}:00</label>
+                    </div>
+                    <div className={style.col}>
+                        <Slider sliderStyle={{marginTop: 0, marginBottom: 0}}
+                                min={0}
+                                max={24}
+                                step={1}
+                                onChange={this.onToChange.bind(this)}
+                                value={this.props.setting.to}/>
+                    </div>
+                </div>
+                <div className={style.row}>
+                    <div className={style.col}>
+                        Every <label>{this.props.setting.every} mins</label>
+                    </div>
+                    <div className={style.col}>
+                        <Slider sliderStyle={{marginTop: 0, marginBottom: 0}}
+                                min={15}
+                                max={60}
+                                step={15}
+                                onChange={this.onEveryChange.bind(this)}
+                                value={this.props.setting.every}/>
+                    </div>
+                </div>
             </div>
         );
     }
