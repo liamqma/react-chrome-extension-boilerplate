@@ -1,6 +1,6 @@
 import { combineReducers } from 'redux';
-import todos from './todos';
+import setting from './setting';
 
 export default combineReducers({
-  todos
+    setting
 });

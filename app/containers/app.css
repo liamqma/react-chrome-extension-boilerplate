@@ -1,0 +1,28 @@
+.normal {
+    background: #fff;
+    padding: 0 5px;
+}
+
+.button {
+    margin-bottom: 10px;
+    text-align: right;
+}
+
+.row {
+    display: flex;
+    margin: 20px 0;
+}
+
+.col:first-child {
+    width: 20%;
+}
+
+.col:first-child label{
+    font-weight: bold;
+    float: right;
+    padding-right: 15px;
+}
+
+.col:last-child {
+    width: 80%;
+}

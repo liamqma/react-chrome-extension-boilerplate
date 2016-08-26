@@ -1,32 +1,31 @@
-const bluebird = require('bluebird');
-global.Promise = bluebird;
+import iconUrl from '../assets/img/stretching.png';
 
-function promisifier(method) {
-  // return a function
-  return function promisified(...args) {
-    // which returns a promise
-    return new Promise(resolve => {
-      args.push(resolve);
-      method.apply(this, args);
+function notify() {
+    chrome.notifications.create('reminder', {
+        type: 'basic',
+        iconUrl,
+        title: 'Time to stand up.',
+        message: 'We want you to live longer!',
+        isClickable: true
     });
-  };
 }
 
-function promisifyAll(obj, list) {
-  list.forEach(api => bluebird.promisifyAll(obj[api], { promisifier }));
-}
+chrome.runtime.onMessage.addListener(
+    function (request) {
+        console.log(request);
+    });
 
-// let chrome extension api support Promise
-promisifyAll(chrome, [
-  'tabs',
-  'windows',
-  'browserAction',
-  'contextMenus'
-]);
-promisifyAll(chrome.storage, [
-  'local',
-]);
+chrome.alarms.onAlarm.addListener(function (alarm) {
+    notify();
+});
 
-require('./background/contextMenus');
-require('./background/inject');
-require('./background/badge');
+notify();
+
+chrome.notifications.onClicked.addListener(notificationId => {
+    chrome.notifications.clear(notificationId);
+    window.open("http://www.liamqma.me/notify/office-stretches.jpg");
+});
+
+chrome.alarms.create('app', {
+    periodInMinutes: 45
+});
