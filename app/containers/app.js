@@ -24,18 +24,24 @@ export default class App extends Component {
     };
 
     onFromChange(event, value) {
-        chrome.runtime.sendMessage({from: value});
         this.props.actions.update('from', value);
+        chrome.storage.local.set({from: value}, function () {
+            chrome.runtime.sendMessage({from: value});
+        });
     }
 
     onToChange(event, value) {
-        chrome.runtime.sendMessage({to: value});
         this.props.actions.update('to', value);
+        chrome.storage.local.set({to: value}, function () {
+            chrome.runtime.sendMessage({to: value});
+        });
     }
 
     onEveryChange(event, value) {
-        chrome.runtime.sendMessage({every: value});
         this.props.actions.update('every', value);
+        chrome.storage.local.set({every: value}, function () {
+            chrome.runtime.sendMessage({every: value});
+        });
     }
 
     render() {

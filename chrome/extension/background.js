@@ -1,5 +1,12 @@
 import iconUrl from '../assets/img/stretching.png';
+import { has } from 'lodash';
 
+// constants
+const defaultEvery = 45;
+const defaultFrom = 9;
+const defaultTo = 17;
+
+// helpers
 function notify() {
     chrome.notifications.create('reminder', {
         type: 'basic',
@@ -10,22 +17,50 @@ function notify() {
     });
 }
 
+/**
+ * Get interval from local storage if there is, otherwise use default interval
+ */
+function startReminder() {
+    chrome.storage.local.get('every', function (result) {
+        if (has(result, 'every')) {
+            setReminderTimer(result.every);
+        } else {
+            chrome.storage.local.set({every: defaultEvery}, function (result) {
+                setReminderTimer(defaultEvery);
+            });
+        }
+    });
+}
+
+/**
+ * Set reminder timer. If there is a timer set already, it will be canceled and replaced by this alarm
+ * @param {number} every
+ */
+function setReminderTimer(every) {
+    chrome.alarms.create('app', {
+        periodInMinutes: every
+    });
+}
+
+// start reminder interval
+startReminder();
+
+// listeners
 chrome.runtime.onMessage.addListener(
-    function (request) {
-        console.log(request);
+    function (request, sender, sendResponse) {
+        if (request.every) {
+            startReminder();
+        }
+        sendResponse();
     });
 
-chrome.alarms.onAlarm.addListener(function (alarm) {
-    notify();
+chrome.alarms.onAlarm.addListener(function () {
+    chrome.storage.local.get(['form', 'to'], function (result) {
+        notify();
+    });
 });
-
-notify();
 
 chrome.notifications.onClicked.addListener(notificationId => {
     chrome.notifications.clear(notificationId);
     window.open("http://www.liamqma.me/notify/office-stretches.jpg");
-});
-
-chrome.alarms.create('app', {
-    periodInMinutes: 45
 });
