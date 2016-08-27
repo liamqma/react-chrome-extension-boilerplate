@@ -1,5 +1,6 @@
 import iconUrl from '../assets/img/stretching.png';
 import { has } from 'lodash';
+import moment from 'moment';
 
 // constants
 const defaultEvery = 45;
@@ -56,7 +57,20 @@ chrome.runtime.onMessage.addListener(
 
 chrome.alarms.onAlarm.addListener(function () {
     chrome.storage.local.get(['form', 'to'], function (result) {
-        notify();
+        let from, to;
+        if (has(result, 'from')) {
+            from = moment(result.from, 'HH');
+        } else {
+            from = moment(defaultFrom, 'HH');
+        }
+        if (has(result, 'to')) {
+            to = moment(result.to, 'HH');
+        } else {
+            to = moment(defaultTo, 'HH');
+        }
+        if (moment().isBetween(from, to)) {
+            notify();
+        }
     });
 });
 
