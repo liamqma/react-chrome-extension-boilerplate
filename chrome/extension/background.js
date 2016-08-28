@@ -76,5 +76,5 @@ chrome.alarms.onAlarm.addListener(function () {
 
 chrome.notifications.onClicked.addListener(notificationId => {
     chrome.notifications.clear(notificationId);
-    window.open("http://www.liamqma.me/notify/office-stretches.jpg");
+    window.open("https://raw.githubusercontent.com/liamqma/stretch-reminder-chome-extension/master/chrome/assets/img/office-stretches.jpg");
 });
