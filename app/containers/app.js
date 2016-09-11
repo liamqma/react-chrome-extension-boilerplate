@@ -23,31 +23,34 @@ export default class App extends Component {
         actions: PropTypes.object.isRequired
     };
 
+    componentDidMount() {
+        chrome.storage.local.get('last', (result = {}) => {
+            if (result.last) {
+                this.props.actions.update('last', result.last);
+            }
+        });
+    }
+
     onFromChange(event, value) {
         this.props.actions.update('from', value);
-        chrome.storage.local.set({from: value}, function () {
-            chrome.runtime.sendMessage({from: value});
-        });
+        chrome.storage.local.set({from: value});
     }
 
     onToChange(event, value) {
         this.props.actions.update('to', value);
-        chrome.storage.local.set({to: value}, function () {
-            chrome.runtime.sendMessage({to: value});
-        });
+        chrome.storage.local.set({to: value});
     }
 
     onEveryChange(event, value) {
         this.props.actions.update('every', value);
-        chrome.storage.local.set({every: value}, function () {
-            chrome.runtime.sendMessage({every: value});
-        });
+        chrome.storage.local.set({every: value});
     }
 
     render() {
         return (
             <div className={style.normal}>
                 <h1>Stretch Reminder</h1>
+                {moment(this.props.setting.last).format('DD-MM-YYYY, h:mm:ss a')}
                 <div className={style.row}>
                     <div className={style.col}>
                         From <label>{this.props.setting.from}:00</label>
