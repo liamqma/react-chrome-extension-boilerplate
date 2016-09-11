@@ -37,7 +37,7 @@ function checkWithin(data = {}) {
  */
 function checkLast(data = {}) {
     if (!data.last) return true;
-    return moment(data.last).add(data.every, 'm').isBefore();
+    return moment(data.last).add(data.every || defaultEvery, 'm').isBefore();
 }
 
 // helpers
