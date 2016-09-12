@@ -42,14 +42,15 @@ function checkLast(data = {}) {
 
 // helpers
 function notify() {
-    const last = moment().format();
-    chrome.storage.local.set({last});
     chrome.notifications.create('reminder', {
         type: 'basic',
         iconUrl,
         title: 'Time to stand up.',
         message: 'We want you to live longer!',
         isClickable: true
+    }, () => {
+        const last = moment().format();
+        chrome.storage.local.set({last});
     });
 }
 

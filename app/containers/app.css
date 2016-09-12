@@ -26,3 +26,9 @@
 .col:last-child {
     width: 80%;
 }
+
+.logo {
+    width: 100px;
+    margin: 0 auto 10px;
+    display: block
+}

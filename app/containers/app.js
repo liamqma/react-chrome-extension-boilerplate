@@ -7,6 +7,7 @@ import List from "../components/list";
 import RaisedButton from "material-ui/RaisedButton";
 import moment from 'moment';
 import Slider from 'material-ui/Slider';
+import logo from './logo.jpg';
 
 @connect(
     state => ({
@@ -49,7 +50,7 @@ export default class App extends Component {
     render() {
         return (
             <div className={style.normal}>
-                <h1>Stretch Reminder</h1>
+                <img className={style.logo} src={logo} />
                 {moment(this.props.setting.last).format('DD-MM-YYYY, h:mm:ss a')}
                 <div className={style.row}>
                     <div className={style.col}>
