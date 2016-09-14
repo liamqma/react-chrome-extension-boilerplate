@@ -8,6 +8,7 @@ import RaisedButton from "material-ui/RaisedButton";
 import moment from 'moment';
 import Slider from 'material-ui/Slider';
 import logo from './logo.jpg';
+import Chip from 'material-ui/Chip';
 
 @connect(
     state => ({
@@ -53,7 +54,7 @@ export default class App extends Component {
         if (this.props.setting.last) {
             const diff = moment(this.props.setting.last).add(this.props.setting.every, 'm').diff(moment(), 'm');
             if (diff > 0) {
-                nextReminder = <label>Next stretch in {diff} minutes</label>
+                nextReminder = <Chip style={{position: 'absolute', top: 0, right: 0}}>Stretch in {diff} minutes</Chip>
             }
         }
 
