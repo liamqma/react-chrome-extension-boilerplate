@@ -48,10 +48,19 @@ export default class App extends Component {
     }
 
     render() {
+
+        let nextReminder = null;
+        if (this.props.setting.last) {
+            const diff = moment(this.props.setting.last).add(this.props.setting.every, 'm').diff(moment(), 'm');
+            if (diff > 0) {
+                nextReminder = <label>Next stretch in {diff} minutes</label>
+            }
+        }
+
         return (
             <div className={style.normal}>
                 <img className={style.logo} src={logo} />
-                {moment(this.props.setting.last).format('DD-MM-YYYY, h:mm:ss a')}
+                {nextReminder}
                 <div className={style.row}>
                     <div className={style.col}>
                         From <label>{this.props.setting.from}:00</label>

@@ -1,11 +1,9 @@
 import iconUrl from '../assets/img/stretching.png';
+import { DEFAULT_STATE } from '../../app/reducers/setting';
 import { has } from 'lodash';
 import moment from 'moment';
 
 // constants
-const defaultEvery = 45;
-const defaultFrom = 9;
-const defaultTo = 17;
 const periodInMinutes = 1; // mins
 
 // start event loop
@@ -24,8 +22,8 @@ chrome.alarms.onAlarm.addListener(function () {
 
 // check if within 'from' and 'to'
 function checkWithin(data = {}) {
-    const from = data.from ? moment(data.from, 'HH') : moment(defaultFrom, 'HH');
-    const to = data.to ? moment(data.to, 'HH') : moment(defaultTo, 'HH');
+    const from = data.from ? moment(data.from, 'HH') : moment(DEFAULT_STATE.from, 'HH');
+    const to = data.to ? moment(data.to, 'HH') : moment(DEFAULT_STATE.to, 'HH');
     return moment().isBetween(from, to);
 }
 
@@ -37,7 +35,7 @@ function checkWithin(data = {}) {
  */
 function checkLast(data = {}) {
     if (!data.last) return true;
-    return moment(data.last).add(data.every || defaultEvery, 'm').isBefore();
+    return moment(data.last).add(data.every || DEFAULT_STATE.every, 'm').isBefore();
 }
 
 // helpers
