@@ -1,11 +1,42 @@
 import iconUrl from '../assets/img/stretching.png';
+import { DEFAULT_STATE } from '../../app/reducers/setting';
 import { has } from 'lodash';
 import moment from 'moment';
 
 // constants
-const defaultEvery = 45;
-const defaultFrom = 9;
-const defaultTo = 17;
+const periodInMinutes = 1; // mins
+
+// start event loop
+chrome.alarms.create('app', {
+    periodInMinutes
+});
+
+// listen on event loop
+chrome.alarms.onAlarm.addListener(function () {
+    chrome.storage.local.get(['form', 'to', 'last', 'every'], (result = {}) => {
+        if (checkWithin(result) && checkLast(result)) {
+            notify();
+        }
+    });
+});
+
+// check if within 'from' and 'to'
+function checkWithin(data = {}) {
+    const from = data.from ? moment(data.from, 'HH') : moment(DEFAULT_STATE.from, 'HH');
+    const to = data.to ? moment(data.to, 'HH') : moment(DEFAULT_STATE.to, 'HH');
+    return moment().isBetween(from, to);
+}
+
+/**
+ * check if last reminder is older than user chosen schedule
+ * return true if last reminder is too old otherwise return false
+ * @param data
+ * @returns {boolean}
+ */
+function checkLast(data = {}) {
+    if (!data.last) return true;
+    return moment(data.last).add(data.every || DEFAULT_STATE.every, 'm').isBefore();
+}
 
 // helpers
 function notify() {
@@ -15,64 +46,11 @@ function notify() {
         title: 'Time to stand up.',
         message: 'We want you to live longer!',
         isClickable: true
+    }, () => {
+        const last = moment().format();
+        chrome.storage.local.set({last});
     });
 }
-
-/**
- * Get interval from local storage if there is, otherwise use default interval
- */
-function startReminder() {
-    chrome.storage.local.get('every', function (result) {
-        if (has(result, 'every')) {
-            setReminderTimer(result.every);
-        } else {
-            chrome.storage.local.set({every: defaultEvery}, function (result) {
-                setReminderTimer(defaultEvery);
-            });
-        }
-    });
-}
-
-/**
- * Set reminder timer. If there is a timer set already, it will be canceled and replaced by this alarm
- * @param {number} every
- */
-function setReminderTimer(every) {
-    chrome.alarms.create('app', {
-        periodInMinutes: every
-    });
-}
-
-// start reminder interval
-startReminder();
-
-// listeners
-chrome.runtime.onMessage.addListener(
-    function (request, sender, sendResponse) {
-        if (request.every) {
-            startReminder();
-        }
-        sendResponse();
-    });
-
-chrome.alarms.onAlarm.addListener(function () {
-    chrome.storage.local.get(['form', 'to'], function (result) {
-        let from, to;
-        if (has(result, 'from')) {
-            from = moment(result.from, 'HH');
-        } else {
-            from = moment(defaultFrom, 'HH');
-        }
-        if (has(result, 'to')) {
-            to = moment(result.to, 'HH');
-        } else {
-            to = moment(defaultTo, 'HH');
-        }
-        if (moment().isBetween(from, to)) {
-            notify();
-        }
-    });
-});
 
 chrome.notifications.onClicked.addListener(notificationId => {
     chrome.notifications.clear(notificationId);

@@ -7,6 +7,8 @@ import List from "../components/list";
 import RaisedButton from "material-ui/RaisedButton";
 import moment from 'moment';
 import Slider from 'material-ui/Slider';
+import logo from './logo.jpg';
+import Chip from 'material-ui/Chip';
 
 @connect(
     state => ({
@@ -23,31 +25,43 @@ export default class App extends Component {
         actions: PropTypes.object.isRequired
     };
 
+    componentDidMount() {
+        chrome.storage.local.get('last', (result = {}) => {
+            if (result.last) {
+                this.props.actions.update('last', result.last);
+            }
+        });
+    }
+
     onFromChange(event, value) {
         this.props.actions.update('from', value);
-        chrome.storage.local.set({from: value}, function () {
-            chrome.runtime.sendMessage({from: value});
-        });
+        chrome.storage.local.set({from: value});
     }
 
     onToChange(event, value) {
         this.props.actions.update('to', value);
-        chrome.storage.local.set({to: value}, function () {
-            chrome.runtime.sendMessage({to: value});
-        });
+        chrome.storage.local.set({to: value});
     }
 
     onEveryChange(event, value) {
         this.props.actions.update('every', value);
-        chrome.storage.local.set({every: value}, function () {
-            chrome.runtime.sendMessage({every: value});
-        });
+        chrome.storage.local.set({every: value});
     }
 
     render() {
+
+        let nextReminder = null;
+        if (this.props.setting.last) {
+            const diff = moment(this.props.setting.last).add(this.props.setting.every, 'm').diff(moment(), 'm');
+            if (diff > 0) {
+                nextReminder = <Chip style={{position: 'absolute', top: 0, right: 0}}>Stretch in {diff} minutes</Chip>
+            }
+        }
+
         return (
             <div className={style.normal}>
-                <h1>Stretch Reminder</h1>
+                <img className={style.logo} src={logo} />
+                {nextReminder}
                 <div className={style.row}>
                     <div className={style.col}>
                         From <label>{this.props.setting.from}:00</label>

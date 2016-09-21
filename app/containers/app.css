@@ -1,6 +1,7 @@
 .normal {
     background: #fff;
     padding: 0 5px;
+    position: relative;
 }
 
 .button {
@@ -25,4 +26,10 @@
 
 .col:last-child {
     width: 80%;
+}
+
+.logo {
+    width: 100px;
+    margin: 0 auto 10px;
+    display: block
 }
